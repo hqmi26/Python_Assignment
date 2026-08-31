@@ -1,0 +1,1 @@
+ticket_id|user_id|ticket_type|ticket_tier|quantity|entry_date|entry_time|price
