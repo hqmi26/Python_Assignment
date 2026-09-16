@@ -1,0 +1,13 @@
+# Midway Theme Park - Ride Records
+# Format: RideID|RideName|Zone|Status|Capacity|CycleTimeMin|StaffRequired|StaffAssigned|WaitTimeMin
+# Status must be one of: OPEN, CLOSED, MAINTENANCE
+101|Thunder Coaster|1|OPEN|24|3
+102|Sky Drop Tower|1|OPEN|16|2
+103|Log Flume Falls|2|OPEN|20|4
+104|Carousel Classic|2|OPEN|30|5
+105|Haunted Manor|3|CLOSED|18|6
+106|Bumper Cars Arena|3|OPEN|22|3
+107|Ferris Wheel Vista|4|OPEN|28|8
+108|Pirate Ship Swing|4|MAINTENANCE|20|4
+109|Rapids Adventure|1|OPEN|16|5
+110|Spinning Teacups|2|OPEN|24|3
