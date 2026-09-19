@@ -18,13 +18,27 @@ Menu-driven console program that manages the park's ride records:
 
 DATA FORMAT (rides.txt)
 -----------------------
-One ride per line, six fields separated by "|":
+The first line is the column-name header row. Every line after it is
+one ride, six fields separated by "|":
 
-    RideID|RideName|Zone|Status|WaitTimeMin|ExpressWaitMin
+    ride_id|ride_name|zone|status|wait_time(normal)|wait_time(express)
     1|Bumper Cars|A|OPEN|25|10
 
-Lines starting with "#" are comments and are skipped when loading.
-Zones are A, B, C, D. Status is OPEN, CLOSED, MAINTENANCE or REMOVED.
+The header row must match RIDES_HEADERS in the group's main.py exactly,
+or the shared read_file() helper rejects the whole file. Zones are
+A, B, C, D. Status is OPEN, CLOSED, UNDER_MAINTAINANCE or REMOVED.
+
+SHARED CODE
+-----------
+Reading is done by read_file() in the group's main.py, so every role
+loads its data the same way. main.py is imported as "shared" because
+this file has its own main() function, which would otherwise overwrite
+the imported module name.
+
+Saving still uses the local save_rides() below: main.py's write_file()
+is not finished yet. When it is, save_rides() can call it, as long as it
+opens in "w" mode and writes the whole list at once - appending one line
+at a time would break Delete and Update.
 
 HOW THE DATA MOVES
 ------------------
@@ -50,9 +64,10 @@ taken, so IDs are never reused and old reports stay accurate.
 
 PYTHON FEATURES AND TOOLS USED
 ------------------------------
-Modules      : os (file existence), random (wait times),
-               datetime (peak-hour detection)
-File I/O     : open() in "r" read mode and "w" write mode, .close()
+Modules      : random (wait times), datetime (peak-hour detection),
+               main (the group's shared read_file helper)
+File I/O     : open() in "w" write mode, .close(); reading is delegated
+               to the shared read_file() helper
 String tools : .strip(), .split(), .join(), .upper(), .startswith()
 Lists        : list of lists, .append(), .sort() with a key function,
                index lookup rides[i][FIELD]
@@ -66,19 +81,23 @@ Structure    : functions with parameters and return values,
                if __name__ == "__main__" entry point
 """
 
-import os
 import random
 import datetime
 
+import main as shared      # the group's shared module: read_file(), line_clean()
+                           # aliased because this file defines its own main()
+
 
 # --- file settings ---------------------------------------------------
-rides_file = "rides.txt"
+# Taken from main.py so the whole group uses one definition. If the file
+# name or the column names change there, this file follows automatically.
+rides_file = shared.RIDES_RECORD
 delimiter = "|"
 
 # --- business rules --------------------------------------------------
 valid_zones = ["A", "B", "C", "D"]
 max_per_zone = 0          # 0 = unlimited rides per zone; set to 4, 8, etc. to cap it
-valid_statuses = ["OPEN", "CLOSED", "MAINTENANCE"]
+valid_statuses = ["OPEN", "CLOSED", "UNDER_MAINTAINANCE"]
 REMOVED_STATUS = "REMOVED"   # deliberately NOT in valid_statuses, so the
                              # user cannot set it through Add or Update
 
@@ -93,41 +112,24 @@ WAIT_TIME = 4
 EXPRESS_TIME = 5
 FIELD = 6                 # how many fields a valid line must split into
 
+# Column names written as the first line of rides.txt, taken from the
+# group's main.py so there is only one definition of the file layout.
+RIDES_HEADERS = shared.RIDES_HEADERS
+
 
 def load_rides():
     """Read rides.txt and return the rides as a list of lists.
 
-    Each line is stripped of its newline, then split on "|" into six
-    pieces. Blank lines and "#" comment lines are skipped. A line that
-    does not split into exactly FIELD pieces is damaged, so it is
-    reported and skipped rather than crashing the program.
+    Uses the group's shared read_file() helper from main.py, which opens the
+    file, checks that the first line matches RIDES_HEADERS, splits every
+    remaining line on "|" and reports any row with the wrong number of
+    fields. It returns the rides already split, so nothing is left to do
+    here.
 
-    Returns an empty list if the file does not exist.
+    Returns an empty list if the file is missing, empty, or its header
+    row does not match - the file is rejected rather than half-loaded.
     """
-    rides = []
-
-    if not os.path.exists(rides_file):
-        print("ERROR: rides.txt not found.")
-        return rides
-
-    data_file = open(rides_file, "r")
-
-    for raw_line in data_file:
-        line = raw_line.strip()
-
-        if line == "" or line.startswith("#"):
-            continue
-
-        parts = line.split(delimiter)
-
-        if len(parts) != FIELD:
-            print("WARNING: skipped corrupted line ->", line)
-            continue
-
-        rides.append(parts)
-
-    data_file.close()
-    return rides
+    return shared.read_file(rides_file, RIDES_HEADERS)
 
 
 def print_rides_table(rides):
@@ -148,37 +150,38 @@ def print_rides_table(rides):
         print("No rides to display.")
         return
 
-    print("-" * 70)
-    print("{:<5}{:<24}{:<7}{:<14}{:<10}{:<10}".format(
+    print("-" * 76)
+    print("{:<5}{:<24}{:<7}{:<20}{:<10}{:<10}".format(
         "ID", "Name", "Zone", "Status", "Wait", "Express"))
-    print("-" * 70)
+    print("-" * 76)
 
     for ride in visible:
-        print("{:<5}{:<24}{:<7}{:<14}{:<10}{:<10}".format(
+        print("{:<5}{:<24}{:<7}{:<20}{:<10}{:<10}".format(
             ride[ID], ride[NAME], ride[ZONE], ride[STATUS],
             ride[WAIT_TIME], ride[EXPRESS_TIME]))
 
-    print("-" * 70)
+    print("-" * 76)
     print("Total:", len(visible), "ride(s)")
 
 
 def save_rides(rides):
     """Write the whole rides list back to rides.txt.
 
-    Opening in "w" mode erases the file immediately, so the header
-    comment lines are written again before the ride data. Each ride is
+    Opening in "w" mode erases the file immediately, so the column-name
+    header row is written again before the ride data. Each ride is
     joined back into one line with "|" between the fields - the exact
     reverse of the .split() done in load_rides().
+
+    The header row is written exactly as RIDES_HEADERS, which matches
+    the group's main.py, so the saved file still passes the header check
+    in the shared read_file() helper.
 
     Must be called after any change to the list, or the change exists
     only in memory and is lost when the program closes.
     """
     data_file = open(rides_file, "w")
 
-    data_file.write("# Midway Theme Park - Ride Records\n")
-    data_file.write("# Format: RideID|RideName|Zone|Status|WaitTimeMin|ExpressWaitMin\n")
-    data_file.write("# Status one of this: OPEN, CLOSED, MAINTENANCE\n")
-    data_file.write("# IDs are permanent and never reused. Names are alphabetical within a zone.\n")
+    data_file.write(delimiter.join(RIDES_HEADERS) + "\n")
 
     for ride in rides:
         data_file.write(delimiter.join(ride) + "\n")
@@ -218,7 +221,7 @@ def view_search_rides(rides):
         print_rides_table(matches)
 
     elif choice == "3":
-        status = input("(Enter OPEN/CLOSED/MAINTENANCE) : ").strip().upper()
+        status = input("(Enter OPEN/CLOSED/UNDER_MAINTAINANCE) : ").strip().upper()
         matches = []
         for ride in rides:
             if ride[STATUS] == status:
@@ -339,10 +342,10 @@ def read_status():
     ride to REMOVED by hand - only delete_ride() does that.
     """
     while True:
-        value = input("Enter Status:(OPEN/CLOSED/MAINTENANCE) ").strip().upper()
+        value = input("Enter Status:(OPEN/CLOSED/UNDER_MAINTAINANCE) ").strip().upper()
         if value in valid_statuses:
             return value
-        print("Status must be OPEN,CLOSED or MAINTENANCE")
+        print("Status must be OPEN,CLOSED or UNDER_MAINTAINANCE")
 
 
 def add_ride(rides):

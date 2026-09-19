@@ -1,7 +1,4 @@
-# Midway Theme Park - Ride Records
-# Format: RideID|RideName|Zone|Status|WaitTimeMin|ExpressWaitMin
-# Status one of this: OPEN, CLOSED, MAINTENANCE
-# IDs are permanent and never reused. Names are alphabetical within a zone.
+ride_id|ride_name|zone|status|wait_time(normal)|wait_time(express)
 1|Bumper Cars|A|OPEN|26|10
 4|Bungee jump|A|REMOVED|0|0
 2|Log Flume|A|OPEN|8|3
@@ -13,7 +10,7 @@
 4|Spinning Teacups|B|OPEN|19|7
 1|Ghost Mine Ride|C|OPEN|16|6
 2|Haunted Manor|C|OPEN|18|7
-3|Zombie Escape|C|MAINTENANCE|0|0
+3|Zombie Escape|C|UNDER_MAINTAINANCE|0|0
 1|Drop Zone X|D|OPEN|26|10
 2|Pirate Ship Swing|D|OPEN|17|6
 3|Rapids Adventure|D|CLOSED|0|0
