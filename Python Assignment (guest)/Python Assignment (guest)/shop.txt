@@ -1,0 +1,4 @@
+P0001|Cute Keychain|25|29
+P0002|Plushie|45|30
+P0003|Merch|59|30
+P0004|Fan|49|30
