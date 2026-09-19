@@ -52,10 +52,21 @@ def read_file(filename, headers):
 def line_clean(value): #removes line break characters so later when compare will not fail because of the invisible whitespace
     return value.strip().replace("\n", "").replace("\r","")
 
-"""
 def write_file(filename, headers, records):
+    # "w" replaces the whole file, so the header row has to be written
+    # again before the records. it must be "w" and not "a": appending
+    # would add rows on top of the old ones, so deleting or editing a
+    # record would never actually change the file.
+    # the loop is INSIDE the function on purpose - the file is opened
+    # once and every record written into it. opening per record would
+    # erase the file each time and only the last record would survive.
     try:
         data_file = open(filename, "w")
-        data_file.write("|")
-        bru idk bro dont understand shit d
-"""
+        data_file.write("|".join(headers) + "\n")
+        for record in records:
+            data_file.write("|".join(record) + "\n")
+        data_file.close()
+    except OSError: #same idea as read_file, a clear message instead of a traceback
+        print(f"Error writing to {filename}")
+    except TypeError: #happens when a record holds a number instead of text
+        print(f"Error writing to {filename}: every field must be a string")

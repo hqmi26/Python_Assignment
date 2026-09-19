@@ -167,26 +167,18 @@ def print_rides_table(rides):
 def save_rides(rides):
     """Write the whole rides list back to rides.txt.
 
-    Opening in "w" mode erases the file immediately, so the column-name
-    header row is written again before the ride data. Each ride is
-    joined back into one line with "|" between the fields - the exact
-    reverse of the .split() done in load_rides().
+    Uses the group's shared write_file() helper from main.py, which
+    replaces the whole file: it writes RIDES_HEADERS as the first line,
+    then one line per ride with "|" between the fields - the exact
+    reverse of the .split() that read_file() does when loading.
 
-    The header row is written exactly as RIDES_HEADERS, which matches
-    the group's main.py, so the saved file still passes the header check
-    in the shared read_file() helper.
+    Because the header row it writes matches RIDES_HEADERS, the saved
+    file still passes the header check the next time it is read.
 
     Must be called after any change to the list, or the change exists
     only in memory and is lost when the program closes.
     """
-    data_file = open(rides_file, "w")
-
-    data_file.write(delimiter.join(RIDES_HEADERS) + "\n")
-
-    for ride in rides:
-        data_file.write(delimiter.join(ride) + "\n")
-
-    data_file.close()
+    shared.write_file(rides_file, RIDES_HEADERS, rides)
 
 
 def view_search_rides(rides):
