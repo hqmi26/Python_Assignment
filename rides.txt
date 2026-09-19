@@ -1,13 +1,19 @@
 # Midway Theme Park - Ride Records
-# Format: RideID|RideName|Zone|Status|Capacity|CycleTimeMin|StaffRequired|StaffAssigned|WaitTimeMin
-# Status must be one of: OPEN, CLOSED, MAINTENANCE
-101|Thunder Coaster|1|OPEN|24|3
-102|Sky Drop Tower|1|OPEN|16|2
-103|Log Flume Falls|2|OPEN|20|4
-104|Carousel Classic|2|OPEN|30|5
-105|Haunted Manor|3|CLOSED|18|6
-106|Bumper Cars Arena|3|OPEN|22|3
-107|Ferris Wheel Vista|4|OPEN|28|8
-108|Pirate Ship Swing|4|MAINTENANCE|20|4
-109|Rapids Adventure|1|OPEN|16|5
-110|Spinning Teacups|2|OPEN|24|3
+# Format: RideID|RideName|Zone|Status|WaitTimeMin|ExpressWaitMin
+# Status one of this: OPEN, CLOSED, MAINTENANCE
+# # IDs are permanent and never reused. Names are alphabetical within a zone.
+1|Bumper Cars|A|OPEN|14|5
+4|Bungee jump|A|OPEN|0|0
+2|Log Flume|A|OPEN|18|7
+3|Power Ride|A|OPEN|8|3
+1|Carousel|B|OPEN|21|8
+2|Ferris Wheel Vista|B|OPEN|16|6
+3|Mini Train Express|B|CLOSED|0|0
+4|Spinning Teacups|B|OPEN|24|9
+1|Ghost Mine Ride|C|OPEN|5|2
+2|Haunted Manor|C|OPEN|21|8
+3|Zombie Escape|C|MAINTENANCE|0|0
+1|Drop Zone X|D|OPEN|25|10
+2|Pirate Ship Swing|D|OPEN|25|10
+3|Rapids Adventure|D|CLOSED|0|0
+4|Wave Rider|D|OPEN|8|3

@@ -1,0 +1,19 @@
+# Midway Theme Park - Ride Records
+# Format: RideID|RideName|Zone|Status|WaitTimeMin|ExpressWaitMin
+# Status one of this: OPEN, CLOSED, MAINTENANCE
+# IDs restart at 1 in every zone. Names are alphabetical within a zone.
+1|Bumper Cars|A|OPEN|25|10
+2|Log Flume|A|OPEN|30|12
+3|Power Ride|A|OPEN|20|8
+4|Thunder Coaster|A|MAINTENANCE|0|0
+1|Carousel|B|OPEN|15|5
+2|Ferris Wheel Vista|B|OPEN|20|8
+3|Mini Train Express|B|CLOSED|0|0
+4|Spinning Teacups|B|OPEN|10|4
+1|Ghost Mine Ride|C|OPEN|35|14
+2|Haunted Manor|C|OPEN|40|16
+3|Zombie Escape|C|MAINTENANCE|0|0
+1|Drop Zone X|D|OPEN|50|20
+2|Pirate Ship Swing|D|OPEN|18|7
+3|Rapids Adventure|D|CLOSED|0|0
+4|Wave Rider|D|OPEN|28|11
