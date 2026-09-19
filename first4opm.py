@@ -9,6 +9,7 @@ delimiter = "|"
 valid_zones =[ "A","B","C","D"]
 max_per_zone = 4
 valid_statuses = ["OPEN","CLOSED","MAINTENANCE"]
+REMOVED_STATUS = "REMOVED"
 
 ID = 0
 NAME = 1
@@ -46,7 +47,12 @@ def load_rides():
 
 
 def print_rides_table(rides):
-    if len(rides) == 0:
+    visible = []
+    for ride in rides:
+        if ride[STATUS] != REMOVED_STATUS:
+            visible.append(ride)
+
+    if len(visible) == 0:
         print("No rides to display.")
         return
 
@@ -55,13 +61,14 @@ def print_rides_table(rides):
         "ID", "Name", "Zone", "Status", "Wait", "Express"))
     print("-" * 70)
 
-    for ride in rides:
+    for ride in visible:
         print("{:<5}{:<24}{:<7}{:<14}{:<10}{:<10}".format(
             ride[ID], ride[NAME], ride[ZONE], ride[STATUS],
             ride[WAIT_TIME], ride[EXPRESS_TIME]))
 
     print("-" * 70)
-    print("Total:", len(rides), "ride(s)")
+    print("Total:", len(visible), "ride(s)")
+
 
 
 def save_rides(rides):
@@ -70,7 +77,7 @@ def save_rides(rides):
     data_file.write("# Midway Theme Park - Ride Records\n")
     data_file.write("# Format: RideID|RideName|Zone|Status|WaitTimeMin|ExpressWaitMin\n")
     data_file.write("# Status one of this: OPEN, CLOSED, MAINTENANCE\n")
-    data_file.write("# # IDs are permanent and never reused. Names are alphabetical within a zone.\n")
+    data_file.write("# IDs are permanent and never reused. Names are alphabetical within a zone.\n")
 
     for ride in rides:
         data_file.write(delimiter.join(ride) + "\n")
@@ -126,16 +133,12 @@ def delete_ride(rides):
 
     zone = input("Enter zone (A/B/C/D): ").strip().upper()
     ride_id = input("Enter ride ID: ").strip()
-
-    # STEP 2: ask which zone, then which ID
-    #         remember .strip().upper() on the zone
-
-    # STEP 3: find the position in the list
     index = -1
     for i in range(len(rides)):
-        if rides[i][ZONE]== zone and rides [i][ID] == ride_id:                       # match BOTH zone and ID
+        if rides[i][ZONE] == zone and rides[i][ID] == ride_id and rides[i][STATUS] != REMOVED_STATUS:
             index = i
             break
+
 
     # STEP 4: not found?
     if index == -1:
@@ -197,8 +200,9 @@ def add_ride(rides):
     # 1. is the zone full?
     count = 0
     for ride in rides:
-        if ride[ZONE] == zone:
+        if ride[ZONE] == zone and ride[STATUS] != REMOVED_STATUS:
             count = count + 1
+
     if count >= max_per_zone:
         print("Zone", zone, "is full (max", max_per_zone, "rides).")
         return

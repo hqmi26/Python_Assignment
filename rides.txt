@@ -1,7 +1,7 @@
 # Midway Theme Park - Ride Records
 # Format: RideID|RideName|Zone|Status|WaitTimeMin|ExpressWaitMin
 # Status one of this: OPEN, CLOSED, MAINTENANCE
-# # IDs are permanent and never reused. Names are alphabetical within a zone.
+# IDs are permanent and never reused. Names are alphabetical within a zone.
 1|Bumper Cars|A|OPEN|14|5
 4|Bungee jump|A|OPEN|0|0
 2|Log Flume|A|OPEN|18|7
