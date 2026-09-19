@@ -1,19 +1,20 @@
 # Midway Theme Park - Ride Records
 # Format: RideID|RideName|Zone|Status|WaitTimeMin|ExpressWaitMin
 # Status one of this: OPEN, CLOSED, MAINTENANCE
-# # IDs are permanent and never reused. Names are alphabetical within a zone.
-1|Bumper Cars|A|OPEN|14|5
-4|Bungee jump|A|OPEN|0|0
-2|Log Flume|A|OPEN|18|7
-3|Power Ride|A|OPEN|8|3
-1|Carousel|B|OPEN|21|8
-2|Ferris Wheel Vista|B|OPEN|16|6
+# IDs are permanent and never reused. Names are alphabetical within a zone.
+1|Bumper Cars|A|OPEN|26|10
+4|Bungee jump|A|REMOVED|0|0
+2|Log Flume|A|OPEN|8|3
+3|Power Ride|A|OPEN|18|7
+5|Bungee jump|B|OPEN|16|6
+1|Carousel|B|OPEN|12|4
+2|Ferris Wheel Vista|B|OPEN|27|10
 3|Mini Train Express|B|CLOSED|0|0
-4|Spinning Teacups|B|OPEN|24|9
-1|Ghost Mine Ride|C|OPEN|5|2
-2|Haunted Manor|C|OPEN|21|8
+4|Spinning Teacups|B|OPEN|19|7
+1|Ghost Mine Ride|C|OPEN|16|6
+2|Haunted Manor|C|OPEN|18|7
 3|Zombie Escape|C|MAINTENANCE|0|0
-1|Drop Zone X|D|OPEN|25|10
-2|Pirate Ship Swing|D|OPEN|25|10
+1|Drop Zone X|D|OPEN|26|10
+2|Pirate Ship Swing|D|OPEN|17|6
 3|Rapids Adventure|D|CLOSED|0|0
-4|Wave Rider|D|OPEN|8|3
+4|Wave Rider|D|OPEN|18|7
