@@ -149,9 +149,12 @@ def delete_ride(rides):
         return
 
     deleted_name = rides[index][NAME]
-    del rides[index]
+    rides[index][STATUS] = REMOVED_STATUS     # was: del rides[index]
+    rides[index][WAIT_TIME] = "0"
+    rides[index][EXPRESS_TIME] = "0"
     save_rides(rides)
     print(deleted_name, "deleted successfully.")
+
 
     
     # STEP 6: del rides[index]
